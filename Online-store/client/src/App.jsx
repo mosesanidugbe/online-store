@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./App.css";
 
 import Nav from "./components/Nav";
@@ -11,24 +12,31 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function App() {
   return (
     <BrowserRouter>
-      <header>
-        <Nav />
-      </header>
+      <div className="app-container">
+        <header>
+          <Link to="/">SEWSS VINTAGE</Link>
+          <form>
+            <input type="search" placeholder="Search products..." />
+            <button type="submit">Search</button>
+          </form>
+          <Nav />
+        </header>
 
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute>
-                <Account />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </main>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </main>
+      </div>
     </BrowserRouter>
   );
 }

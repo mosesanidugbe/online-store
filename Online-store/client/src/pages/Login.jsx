@@ -85,7 +85,9 @@ function Login() {
           onChange={(event) => setPassword(event.target.value)}
           value={password}
         />
-        {errorMessage && <p role="alert">{errorMessage}</p>}
+        <p role="alert" className="error-message">
+          {errorMessage}
+        </p>
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? "Submitting..."
@@ -95,14 +97,16 @@ function Login() {
         </button>
       </form>
 
-      <p>
-        {pageState === "login"
-          ? "Don't have an account? "
-          : "Already have an account? "}
-      </p>
-      <button type="button" onClick={togglePageState}>
-        {pageState === "login" ? "Sign Up" : "Login"}
-      </button>
+      <div className="toggle-container">
+        <p>
+          {pageState === "login"
+            ? "Don't have an account? "
+            : "Already have an account? "}
+        </p>
+        <button type="button" onClick={togglePageState}>
+          {pageState === "login" ? "Sign Up" : "Login"}
+        </button>
+      </div>
     </div>
   );
 }
