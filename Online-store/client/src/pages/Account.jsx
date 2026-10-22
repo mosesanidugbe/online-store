@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import API_URL from "../api.js";
 import { useNavigate } from "react-router-dom";
 
 function Account() {
@@ -11,7 +12,7 @@ function Account() {
   useEffect(() => {
     async function getAccount() {
       try {
-        const response = await fetch("http://localhost:3000/account", {
+        const response = await fetch(`${API_URL}/account`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

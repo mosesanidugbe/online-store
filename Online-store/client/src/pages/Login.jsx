@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../api.js";
 import AuthContext from "../context/AuthContext";
 
 function Login() {
@@ -30,7 +31,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/auth/${isSignup ? "register" : "login"}`,
+        `${API_URL}/auth/${isSignup ? "register" : "login"}`,
         {
           method: "POST",
           headers: {
