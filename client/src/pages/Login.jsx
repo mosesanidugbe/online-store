@@ -10,6 +10,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -73,19 +74,30 @@ function Login() {
           type="text"
           onChange={(event) => setUserName(event.target.value)}
           value={username}
+          placeholder="Username"
         />
         {pageState === "signup" && (
           <input
             type="email"
             onChange={(event) => setEmail(event.target.value)}
             value={email}
+            placeholder="Email"
           />
         )}
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           onChange={(event) => setPassword(event.target.value)}
           value={password}
+          placeholder="Password"
         />
+        <label>
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={(event) => setShowPassword(event.target.checked)}
+          />
+          Show password
+        </label>
         <p role="alert" className="error-message">
           {errorMessage}
         </p>
