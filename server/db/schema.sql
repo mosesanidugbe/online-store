@@ -6,3 +6,16 @@ CREATE TABLE users (
     role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER',
     CHECK (role IN ('CUSTOMER', 'OWNER'))
 );
+
+CREATE TABLE products (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+    image_url TEXT,
+    category TEXT,
+    stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
+    is_placeholder BOOLEAN NOT NULL DEFAULT FALSE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
