@@ -1,3 +1,20 @@
+:root {
+  /* Base */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* Dark tones */
+  --color-dark: #111111;
+  --color-text: #242424;
+
+  /* Gray tones */
+  --color-gray-dark: #595959;
+  --color-gray: #6e6e6e;
+  --color-gray-light: #d6d6d6;
+  --color-gray-lighter: #ededed;
+  --color-gray-lightest: #f3f3f3;
+}
+
 * {
   margin: 0;
   padding: 0;
