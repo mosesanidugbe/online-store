@@ -36,20 +36,20 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        working-directory: Online-store/server
+        working-directory: server
         run: npm ci
       - name: Set up test database
-        working-directory: Online-store/server
+        working-directory: server
         run: PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -f db/schema.sql
       - name: Run tests
-        working-directory: Online-store/server
+        working-directory: server
         run: npm test
       - name: Install dependencies for client
-        working-directory: Online-store/client
+        working-directory: client
         run: npm ci
       - name: Run client lint tests
-        working-directory: Online-store/client
+        working-directory: client
         run: npm run lint
       - name: Run client build tests
-        working-directory: Online-store/client
+        working-directory: client
         run: npm run build

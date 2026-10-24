@@ -1,205 +1,161 @@
-# Software Development Projects
+# Online Store
 
-A collection of software development projects built while learning and applying programming and software engineering concepts.
+An online store application with a React client and an Express/PostgreSQL
+server. The project provides a storefront experience, user registration and
+login, JWT-based authentication, and a protected account page.
 
-The repository is organized by **project**, with each project containing the technologies and applications that belong to it. Most projects are built around practical problems and are used to develop my understanding through hands-on work.
+## Features
 
-## Projects
+- Browse the online store from the React home page
+- Register an account with username, email, and password validation
+- Log in with an existing account
+- Secure passwords with bcrypt
+- Authenticate requests with JSON Web Tokens
+- Protect account pages and API routes
+- Store users and roles in PostgreSQL
+- Run automated authentication tests with Jest and Supertest
 
-### Digital Asset Store
-
-A full-stack digital marketplace where sellers can list digital products and buyers can browse and purchase them.
-
-The project is split into a backend API and a React frontend.
-
-**Technologies:**
-
-- Node.js
-- Express.js
-- PostgreSQL
-- React
-- Vite
-- JavaScript
-- JWT
-- bcrypt
-
-**Structure:**
+## Project structure
 
 ```text
-Digital-asset-store/
-├── digital-asset-store-api/
-└── digital-store-frontend/
+Online-store/
+├── client/                 # React and Vite frontend
+│   ├── src/
+│   │   ├── components/     # Navigation, products, and route protection
+│   │   ├── context/        # Authentication state
+│   │   └── pages/          # Home, login, and account pages
+│   └── package.json
+└── server/                 # Express API
+    ├── db/
+    │   └── schema.sql      # PostgreSQL database schema
+    ├── routes/             # Authentication and account routes
+    ├── tests/              # API tests and test setup
+    └── package.json
 ```
-
-The project covers concepts such as:
-
-- REST API development
-- Database design and relationships
-- User authentication
-- Authorization and role-based access control
-- Product management
-- Purchases
-- React components and state
-- Frontend-backend communication
-
----
-
-### Expense Tracker
-
-A multi-user expense tracking API for recording and managing financial transactions.
-
-**Technologies:**
-
-- Node.js
-- Express.js
-- PostgreSQL
-- JWT
-- bcrypt
-
-**Concepts covered:**
-
-- Authentication
-- CRUD operations
-- Filtering
-- Sorting
-- Pagination
-- SQL aggregation
-- Financial reporting
-- REST APIs
-
----
-
-### Library App
-
-A RESTful API for managing books in a library system.
-
-**Technologies:**
-
-- Node.js
-- Express.js
-- PostgreSQL
-- pg
-- dotenv
-
-**Concepts covered:**
-
-- CRUD operations
-- PostgreSQL
-- Database relationships
-- API routes
-- Middleware
-- Request validation
-- Error handling
-
----
-
-### Task Manager App
-
-A task management API with user authentication and protected resources.
-
-**Technologies:**
-
-- Node.js
-- Express.js
-- PostgreSQL
-- JWT
-- bcrypt
-
-**Concepts covered:**
-
-- User authentication
-- Password hashing
-- JWT-based authorization
-- Protected routes
-- Middleware
-- User-specific resources
-- CRUD operations
-
----
-
-### Timestamp Microservice App
-
-A microservice that processes dates and returns timestamp information through an API.
-
-**Technologies:**
-
-- JavaScript
-- Node.js
-- Express.js
-
-**Concepts covered:**
-
-- REST APIs
-- Route parameters
-- Date and time handling
-- JSON responses
-
----
-
-### Weather Service App
-
-A weather-related API project built while learning backend development and API design.
-
-**Technologies:**
-
-- JavaScript
-- Node.js
-- Express.js
-
-**Concepts covered:**
-
-- API routes
-- JSON responses
-- Request handling
-- Working with API data
 
 ## Technologies
 
-### Backend
+### Client
+
+- React
+- React Router
+- Vite
+- JavaScript
+
+### Server
 
 - Node.js
-- Express.js
+- Express
 - PostgreSQL
-- SQL
-- JWT
+- `pg`
+- JSON Web Tokens
 - bcrypt
-- REST APIs
+- Jest
+- Supertest
 
-### Frontend
+## Getting started
 
-- HTML
-- CSS
-- JavaScript
-- React
-- Vite
+### Prerequisites
 
-### Tools & Practices
+- Node.js
+- npm
+- PostgreSQL
 
-- Git
-- GitHub
-- VS Code
-- Postman
-- Environment variables
-- API testing
+### 1. Set up the database
 
-## Purpose
+Create a PostgreSQL database, then apply the schema:
 
-This repository serves as a record of my progress in software development.
+```bash
+psql -d online_store -f server/db/schema.sql
+```
 
-Rather than building projects only by following tutorials, I use these projects to learn concepts, solve problems, and gradually develop the ability to build complete applications.
+The server supports either a `DATABASE_URL` connection string or these
+individual database variables:
 
-As I learn new technologies, existing projects may be expanded or new projects may be added.
+```text
+DB_USER=
+DB_HOST=
+DB_NAME=
+DB_PASSWORD=
+DB_PORT=
+```
 
-## Future Learning
+Add `JWT_SECRET` to the server environment as well:
 
-Areas I plan to explore include:
+```text
+JWT_SECRET=replace-with-a-long-random-secret
+```
 
-- TypeScript
-- Docker
-- ORMs
-- Automated testing
-- Deployment
-- CI/CD
-- More advanced system architecture
-- Full-stack application development
-- Game development
+For the test suite, create a separate database whose name ends in `_test` and
+place its settings in `server/.env.test`.
+
+### 2. Install dependencies
+
+Install dependencies for both applications:
+
+```bash
+cd server
+npm install
+
+cd ../client
+npm install
+```
+
+### 3. Run the application
+
+Start the API from the `server` directory:
+
+```bash
+npm start
+```
+
+The API listens on port `3000` by default. To use another port, set `PORT`.
+
+In a second terminal, start the client from the `client` directory:
+
+```bash
+npm run dev
+```
+
+The client uses `http://localhost:3000` as its default API URL. Set
+`VITE_API_URL` when the API is running elsewhere.
+
+## API routes
+
+| Method | Route | Description |
+| --- | --- | --- |
+| `GET` | `/` | Check that the API is running |
+| `POST` | `/auth/register` | Create a customer account |
+| `POST` | `/auth/login` | Authenticate a user |
+| `GET` | `/account` | Get the authenticated user's account details |
+
+The `/account` route requires a valid bearer token.
+
+## Available scripts
+
+### Client
+
+From `client`:
+
+```bash
+npm run dev       # Start the Vite development server
+npm run build     # Create a production build
+npm run lint      # Run ESLint
+npm run preview   # Preview the production build
+```
+
+### Server
+
+From `server`:
+
+```bash
+npm start         # Start the Express server
+npm test          # Run the Jest test suite
+```
+
+## Authentication
+
+When a user registers or logs in successfully, the server returns a JWT and
+basic user details. The client uses the token to access protected routes such
+as the account page. Passwords are never stored directly; they are hashed with
+bcrypt before being saved to PostgreSQL.
