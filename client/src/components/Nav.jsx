@@ -28,12 +28,6 @@ function Nav() {
 
   return (
     <nav>
-      <a href="/">SEWSS VINTAGE</a>
-      <form>
-        <input type="search" placeholder="Search products..." />
-        <button type="submit">Search</button>
-      </form>
-
       <div className="account-menu">
         <button
           type="button"
