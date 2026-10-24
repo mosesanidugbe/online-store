@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.js";
 import accountRouter from "./routes/account.js";
+import storefrontRouter from "./routes/storefront.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
+app.use("/storefront", storefrontRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Online Store API is running" });
