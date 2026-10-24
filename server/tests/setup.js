@@ -28,7 +28,9 @@ const schema = await readFile(new URL("../db/schema.sql", import.meta.url), "utf
 await pool.query(schema);
 
 beforeEach(async () => {
-  await pool.query("TRUNCATE TABLE products, users RESTART IDENTITY CASCADE");
+  await pool.query(
+    "TRUNCATE TABLE storefront_sections, products, users RESTART IDENTITY CASCADE",
+  );
 });
 
 afterAll(async () => {
