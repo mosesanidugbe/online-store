@@ -46,25 +46,57 @@ router.patch("/:id", async (req, res) => {
   if (!Number.isInteger(productId) || productId < 1) {
     return res.status(400).json({ message: "Product ID must be a positive integer" });
   }
-  const keys = Object.keys(req.body ?? {});
-  if (keys.length === 0 || keys.some((key) => !["is_placeholder", "is_active"].includes(key)) ||
-      keys.some((key) => typeof req.body[key] !== "boolean")) {
-    return res.status(400).json({ message: "Provide is_placeholder and/or is_active as boolean values" });
+  const allowedFields = {
+    name: (value) => typeof value === "string" && value.trim().length > 0 && value.trim().length <= 150,
+    description: (value) => typeof value === "string" && value.length <= 5000,
+    price: (value) => value !== "" && value !== null && value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0,
+    image_url: (value) => typeof value === "string" && value.length <= 2048,
+    category: (value) => typeof value === "string" && value.length <= 100,
+    is_placeholder: (value) => typeof value === "boolean",
+    is_active: (value) => typeof value === "boolean",
+  };
+  const entries = Object.entries(req.body ?? {});
+  if (entries.length === 0 || entries.some(([key, value]) => !allowedFields[key] || !allowedFields[key](value))) {
+    return res.status(400).json({ message: "Provide valid product details or boolean status flags. Use the stock endpoint to adjust inventory." });
   }
-
+  const columns = { name: "name", description: "description", price: "price", image_url: "image_url", category: "category", is_placeholder: "is_placeholder", is_active: "is_active" };
+  const values = entries.map(([key, value]) => key === "name" || key === "description" || key === "image_url" || key === "category" ? value.trim() : key === "price" ? Number(value) : value);
+  const assignments = entries.map(([key], index) => columns[key] + " = $" + (index + 1));
+  values.push(productId);
   try {
     const result = await pool.query(
-      "UPDATE products SET is_placeholder = COALESCE($1, is_placeholder), is_active = COALESCE($2, is_active) WHERE id = $3 RETURNING id, name, description, price, image_url, category, stock_quantity, is_placeholder, is_active, created_at",
-      [req.body.is_placeholder ?? null, req.body.is_active ?? null, productId],
+      "UPDATE products SET " + assignments.join(", ") + " WHERE id = $" + values.length + " RETURNING id, name, description, price, image_url, category, stock_quantity, is_placeholder, is_active, created_at",
+      values,
     );
     if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
     res.status(200).json({ product: result.rows[0] });
   } catch (error) {
-    console.error("Failed to update product status:", error.message);
+    console.error("Failed to update product:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 });
 
+router.post("/:id/stock", async (req, res) => {
+  const productId = Number(req.params.id);
+  const { adjustment, quantity } = req.body ?? {};
+  if (!Number.isInteger(productId) || productId < 1) {
+    return res.status(400).json({ message: "Product ID must be a positive integer" });
+  }
+  if (!["add", "set"].includes(adjustment) || !Number.isInteger(Number(quantity)) || Number(quantity) < 0 || quantity === "" || quantity === null || quantity === undefined || (adjustment === "add" && Number(quantity) < 1)) {
+    return res.status(400).json({ message: "Provide adjustment as add or set and a valid stock quantity. Add quantity must be at least 1." });
+  }
+  try {
+    const sql = adjustment === "add"
+      ? "UPDATE products SET stock_quantity = stock_quantity + $1 WHERE id = $2 RETURNING id, name, description, price, image_url, category, stock_quantity, is_placeholder, is_active, created_at"
+      : "UPDATE products SET stock_quantity = $1 WHERE id = $2 RETURNING id, name, description, price, image_url, category, stock_quantity, is_placeholder, is_active, created_at";
+    const result = await pool.query(sql, [Number(quantity), productId]);
+    if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
+    res.status(200).json({ product: result.rows[0] });
+  } catch (error) {
+    console.error("Failed to adjust product stock:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 router.delete("/:id", async (req, res) => {
   const productId = Number(req.params.id);
   if (!Number.isInteger(productId) || productId < 1) {
