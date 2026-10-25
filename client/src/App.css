@@ -626,3 +626,23 @@ nav a:focus-visible {
     padding: var(--space-4);
   }
 }
+
+
+.product-manager-check {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.product-manager-check input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--color-primary);
+}
+
+.product-manager-image {
+  width: 88px;
+  height: 88px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  background-color: var(--color-surface-muted);
+}
