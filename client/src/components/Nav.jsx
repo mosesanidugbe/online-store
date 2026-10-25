@@ -42,6 +42,13 @@ function Nav() {
           <div className="account-dropdown" ref={dropDownMenuRef}>
             {isAuthenticated ? (
               <>
+                {user?.role === "OWNER" ? (
+                  <Link to="/owner">
+                    <button onClick={() => setIsAccountOpen(false)}>
+                      Storefront manager
+                    </button>
+                  </Link>
+                ) : null}
                 <Link to="/account">
                   <button onClick={() => setIsAccountOpen(false)}>
                     My Account
