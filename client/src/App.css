@@ -6,13 +6,12 @@
 
 .store-logo {
   color: var(--color-text-inverse);
-  font-family: "Segoe Script", "Bradley Hand", "Apple Chancery", cursive;
-  font-size: clamp(1.05rem, 2vw, 1.4rem);
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-family: "Allura", cursive;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
   line-height: 1.2;
   text-decoration: none;
-  text-transform: uppercase;
   white-space: nowrap;
   transition: color var(--transition-fast);
 }
