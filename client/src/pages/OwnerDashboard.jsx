@@ -113,7 +113,6 @@ function OwnerDashboard() {
     };
     try {
       if (editingId !== null) {
-        const existing = sections.find((section) => section.id === editingId);
         await request(`/storefront/sections/${editingId}`, {
           method: "PATCH",
           body: JSON.stringify({
