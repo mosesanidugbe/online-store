@@ -56,7 +56,7 @@ router.patch("/:id", async (req, res) => {
     is_active: (value) => typeof value === "boolean",
   };
   const entries = Object.entries(req.body ?? {});
-  if (entries.length === 0 || entries.some(([key, value]) => !allowedFields[key] || !allowedFields[key](value))) {
+  if (entries.length === 0 || entries.some(([key, value]) => !Object.hasOwn(allowedFields, key) || !allowedFields[key](value))) {
     return res.status(400).json({ message: "Provide valid product details or boolean status flags. Use the stock endpoint to adjust inventory." });
   }
   const columns = { name: "name", description: "description", price: "price", image_url: "image_url", category: "category", is_placeholder: "is_placeholder", is_active: "is_active" };
