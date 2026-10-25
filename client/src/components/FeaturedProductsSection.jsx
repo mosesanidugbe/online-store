@@ -12,6 +12,7 @@ function FeaturedProductsSection({ section }) {
   const limit = Number.isFinite(requestedLimit)
     ? Math.min(MAX_PRODUCTS, Math.max(1, Math.floor(requestedLimit)))
     : 8;
+  const productIds = settings.product_ids;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -29,11 +30,13 @@ function FeaturedProductsSection({ section }) {
         const availableProducts = Array.isArray(data.products)
           ? data.products
           : [];
-        const selectedIds = Array.isArray(settings.product_ids)
-          ? settings.product_ids.map(Number).filter(Number.isFinite)
+        const selectedIds = Array.isArray(productIds)
+          ? productIds.map(Number).filter(Number.isFinite)
           : [];
         const selectedProducts = selectedIds.length
-          ? availableProducts.filter((product) => selectedIds.includes(Number(product.id)))
+          ? availableProducts.filter((product) =>
+              selectedIds.includes(Number(product.id)),
+            )
           : availableProducts;
 
         setProducts(selectedProducts.slice(0, limit));
@@ -47,7 +50,7 @@ function FeaturedProductsSection({ section }) {
 
     loadProducts();
     return () => controller.abort();
-  }, [limit, settings.product_ids]);
+  }, [limit, productIds]);
 
   return (
     <section className="product-section">
