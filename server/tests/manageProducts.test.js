@@ -75,3 +75,66 @@ test("product deletion requires owner authorization", async () => {
   expect((await request(app).delete("/manage/products/1")
     .set("Authorization", `Bearer ${customerToken}`)).status).toBe(403);
 });
+
+
+test("owner can edit product details without changing stock", async () => {
+  const token = await createOwner();
+  const created = await request(app).post("/manage/products")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: "Old name", description: "Old description", price: 10, category: "Old category", stock_quantity: 7 });
+  expect(created.status).toBe(201);
+
+  const updated = await request(app).patch(`/manage/products/${created.body.product.id}`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: "New name", description: "New description", price: 25.5, category: "New category", image_url: "/new-image.jpg" });
+
+  expect(updated.status).toBe(200);
+  expect(updated.body.product).toEqual(expect.objectContaining({
+    name: "New name",
+    description: "New description",
+    price: "25.50",
+    category: "New category",
+    image_url: "/new-image.jpg",
+    stock_quantity: 7,
+  }));
+});
+
+test("owner can add stock and correct the total stock count", async () => {
+  const token = await createOwner();
+  const created = await request(app).post("/manage/products")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: "Stock test", price: 10, stock_quantity: 4 });
+  expect(created.status).toBe(201);
+  const productId = created.body.product.id;
+
+  const added = await request(app).post(`/manage/products/${productId}/stock`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({ adjustment: "add", quantity: 6 });
+  expect(added.status).toBe(200);
+  expect(added.body.product.stock_quantity).toBe(10);
+
+  const corrected = await request(app).post(`/manage/products/${productId}/stock`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({ adjustment: "set", quantity: 3 });
+  expect(corrected.status).toBe(200);
+  expect(corrected.body.product.stock_quantity).toBe(3);
+});
+
+test("product edits and stock adjustments reject invalid input", async () => {
+  const token = await createOwner();
+  const created = await request(app).post("/manage/products")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: "Validation test", price: 10, stock_quantity: 2 });
+  const productId = created.body.product.id;
+
+  expect((await request(app).patch(`/manage/products/${productId}`)
+    .set("Authorization", `Bearer ${token}`).send({ name: "   " })).status).toBe(400);
+  expect((await request(app).patch(`/manage/products/${productId}`)
+    .set("Authorization", `Bearer ${token}`).send({ stock_quantity: 20 })).status).toBe(400);
+  expect((await request(app).post(`/manage/products/${productId}/stock`)
+    .set("Authorization", `Bearer ${token}`).send({ adjustment: "add", quantity: 0 })).status).toBe(400);
+  expect((await request(app).post(`/manage/products/${productId}/stock`)
+    .set("Authorization", `Bearer ${token}`).send({ adjustment: "set", quantity: -1 })).status).toBe(400);
+  expect((await request(app).post("/manage/products/999999/stock")
+    .set("Authorization", `Bearer ${token}`).send({ adjustment: "add", quantity: 1 })).status).toBe(404);
+});
