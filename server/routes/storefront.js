@@ -28,6 +28,7 @@ function validateSettings(type, settings) {
   }
 
   const allowedKeys = settingKeys[type];
+  if (!allowedKeys) return "Settings for this section type cannot be edited";
   for (const [key, value] of Object.entries(settings)) {
     if (!allowedKeys.has(key)) {
       return `Unsupported setting: ${key}`;
@@ -88,6 +89,7 @@ router.get("/manage/sections", authenticateToken, requireOwner, async (req, res)
     const result = await pool.query(
       `SELECT id, type, title, is_visible, display_order, settings
        FROM storefront_sections
+       WHERE type IN ('hero_banner', 'featured_products')
        ORDER BY display_order ASC, id ASC`,
     );
     res.status(200).json({ sections: result.rows });
