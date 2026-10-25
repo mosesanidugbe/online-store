@@ -4,12 +4,37 @@
   flex-direction: column;
 }
 
+.store-logo {
+  color: var(--color-text-inverse);
+  font-family: "Allura", cursive;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.store-logo:hover {
+  color: var(--color-rose);
+}
+
+.store-logo:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
 header {
-  background-color: #111827;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-card);
 }
 
 main {
@@ -17,86 +42,102 @@ main {
 }
 
 nav {
-  color: #ffffff;
-  padding: 10px;
-  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  color: var(--color-text-inverse);
+  text-align: center;
 }
 
 nav a {
-  color: #ffffff;
+  margin: 0 var(--space-2);
+  color: var(--color-text-inverse);
   text-decoration: none;
-  margin: 0 10px;
+  transition: color var(--transition-fast);
+}
+
+nav a:hover {
+  color: var(--color-rose);
 }
 
 nav button {
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
   background-color: transparent;
-  color: #ffffff;
-  border: none;
-  padding: 5px 10px;
+  color: var(--color-text-inverse);
   cursor: pointer;
-  border-radius: 4px;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
+
+nav button:hover {
+  background-color: rgb(255 255 255 / 12%);
+}
+
 nav input[type="search"]:focus {
-  outline: none;
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
-.account-menu {
-  position: relative;
-}
-
-.account-dropdown {
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  background-color: #ffffff;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.account-dropdown button {
-  color: #000000;
-}
-
+.account-menu,
 .help-menu {
   position: relative;
 }
 
+.account-dropdown,
 .help-dropdown {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
   display: flex;
   flex-direction: column;
   width: 200px;
-  background-color: #ffffff;
-  position: absolute;
-  left: 50%;
+  padding: var(--space-2);
   transform: translateX(-50%);
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-popover);
+}
+
+.account-dropdown button,
+.help-dropdown button {
+  width: 100%;
+  color: var(--color-text);
+  text-align: left;
+}
+
+.account-dropdown button:hover,
+.help-dropdown button:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.account-dropdown a {
+  margin: 0;
+  color: var(--color-text);
 }
 
 .storefront-sections {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-bottom: 32px;
+  gap: var(--space-8);
+  padding-bottom: var(--space-8);
 }
 
 .storefront-message {
-  padding: 32px 20px;
+  padding: var(--space-12) var(--space-5);
+  color: var(--color-text-muted);
   text-align: center;
 }
 
 .storefront-hero {
-  min-height: 300px;
   display: flex;
   align-items: center;
-  padding: clamp(24px, 6vw, 72px);
-  background-color: #e8edf5;
+  min-height: 300px;
+  padding: clamp(var(--space-6), 6vw, var(--space-16));
+  background-color: var(--color-surface-muted);
   background-position: center;
   background-size: cover;
 }
@@ -106,54 +147,61 @@ nav input[type="search"]:focus {
 }
 
 .storefront-hero-content h1 {
-  margin: 0 0 12px;
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: var(--space-3);
+  font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-4xl));
 }
 
 .storefront-hero-content p {
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
 }
 
 .storefront-hero-cta {
   display: inline-block;
-  margin-top: 12px;
-  padding: 12px 18px;
-  border-radius: 4px;
-  background-color: #111827;
-  color: #ffffff;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
   text-decoration: none;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.storefront-hero-cta:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
 
 .product-section {
-  padding: 20px;
-  background-color: #4673ae79;
+  /* Match the hero's horizontal inset so section headings share an edge. */
+  padding: var(--space-6) clamp(var(--space-6), 6vw, var(--space-16));
+  background-color: var(--color-surface-muted);
 }
 
 .product-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .products-list {
   display: flex;
-  overflow-x: auto;
   justify-content: flex-start;
-  gap: 20px;
-  padding: 20px 0;
+  gap: var(--space-5);
+  overflow-x: auto;
+  padding: var(--space-5) 0;
 }
 
 .product-card {
-  width: 250px;
+  flex: 0 0 250px;
   height: 300px;
-  flex-shrink: 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-card);
   text-align: center;
-  background: #ffffff;
 }
 
 .product-card img {
@@ -163,65 +211,269 @@ nav input[type="search"]:focus {
 }
 
 .login-container {
-  background-color: #a7a7ac;
-  width: 100%;
-  max-width: 350px;
-  min-height: 400px;
-  border-radius: 8px;
-  margin: 20px auto 0;
-  padding: 25px;
   display: flex;
   flex-direction: column;
+  width: min(100% - var(--space-8), 420px);
+  min-height: 400px;
+  margin: var(--space-10) auto;
+  padding: var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .login-container h1 {
-  color: #ffffff;
+  margin-bottom: var(--space-6);
+  color: var(--color-heading);
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .login-container form {
-  min-height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 10px;
+  gap: var(--space-3);
+  min-height: 200px;
 }
 
-.login-container form input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
+.login-container form > input {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
-.login-container form button {
-  padding: 10px;
-  background-color: #111827;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
+.login-container form > input:focus {
+  border-color: var(--color-focus);
+}
+
+.login-container form label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.login-container form button,
+.owner-form-actions button,
+.owner-section-actions button {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
   cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.login-container form button:hover,
+.owner-form-actions button:hover,
+.owner-section-actions button:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.login-container form button:active,
+.owner-form-actions button:active,
+.owner-section-actions button:active:not(:disabled) {
+  background-color: var(--color-primary-active);
+}
+
+.login-container form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .login-container .error-message {
-  color: red;
+  min-height: 1.5em;
+  margin-top: var(--space-2);
+  color: var(--color-error);
   text-align: center;
-  min-height: 20px;
-  margin-top: 10px;
 }
 
 .toggle-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: var(--space-1);
   margin-top: auto;
+  padding-top: var(--space-5);
 }
 
 .toggle-container button {
-  background-color: transparent;
-  color: #ffffff;
-  border: none;
+  margin-left: var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--color-link);
   cursor: pointer;
   text-decoration: underline;
-  margin-left: 5px;
+  text-underline-offset: 0.15em;
+}
+
+.toggle-container button:hover {
+  color: var(--color-link-hover);
+}
+
+/* Owner storefront manager */
+.owner-dashboard {
+  width: min(100% - var(--space-8), 1000px);
+  margin: var(--space-10) auto;
+  color: var(--color-text);
+}
+
+.owner-dashboard > h1 {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-3xl);
+}
+
+.owner-dashboard > p {
+  margin-bottom: var(--space-5);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+}
+
+.owner-panel,
+.owner-section-list {
+  margin: var(--space-5) 0;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.owner-panel h2,
+.owner-section-list h2 {
+  margin-bottom: var(--space-5);
+  font-size: var(--font-size-2xl);
+}
+
+.owner-section-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.owner-section-form label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.owner-section-form input,
+.owner-section-form select,
+.owner-section-form textarea {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 400;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.owner-section-form input:focus,
+.owner-section-form select:focus,
+.owner-section-form textarea:focus {
+  border-color: var(--color-focus);
+}
+
+.owner-section-form input:disabled,
+.owner-section-form select:disabled,
+.owner-section-form textarea:disabled {
+  background-color: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.owner-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.owner-form-actions .secondary,
+.owner-section-actions .secondary {
+  border-color: var(--color-border);
+  background-color: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.owner-form-actions .secondary:hover,
+.owner-section-actions .secondary:hover:not(:disabled) {
+  background-color: var(--color-linen);
+}
+
+.owner-section-card {
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.owner-section-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.owner-section-card h3 {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.owner-section-card p {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.owner-section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.owner-section-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.owner-message {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+@media (max-width: 680px) {
+  header {
+    flex-wrap: wrap;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .owner-section-form {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-section-card-main {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .owner-panel,
+  .owner-section-list {
+    padding: var(--space-4);
+  }
+
+  .product-section {
+    padding: var(--space-4);
+  }
 }

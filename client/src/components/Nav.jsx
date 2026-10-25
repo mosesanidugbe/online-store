@@ -5,7 +5,7 @@ import AuthContext from "../context/AuthContext.jsx";
 function Nav() {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
   const dropDownMenuRef = useRef(null);
 
   useEffect(() => {
@@ -42,6 +42,13 @@ function Nav() {
           <div className="account-dropdown" ref={dropDownMenuRef}>
             {isAuthenticated ? (
               <>
+                {user?.role === "OWNER" ? (
+                  <Link to="/owner">
+                    <button onClick={() => setIsAccountOpen(false)}>
+                      Storefront manager
+                    </button>
+                  </Link>
+                ) : null}
                 <Link to="/account">
                   <button onClick={() => setIsAccountOpen(false)}>
                     My Account
