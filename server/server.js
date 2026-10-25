@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRouter from "./routes/auth.js";
 import accountRouter from "./routes/account.js";
 import productsRouter from "./routes/products.js";
+import manageProductsRouter from "./routes/manageProducts.js";
 import storefrontRouter from "./routes/storefront.js";
 
 dotenv.config();
@@ -16,9 +17,10 @@ app.use(cors());
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/products", productsRouter);
+app.use("/manage/products", manageProductsRouter);
 app.use("/storefront", storefrontRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.json({ message: "Online Store API is running" });
 });
 

@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import API_URL from "../api.js";
 import AuthContext from "../context/AuthContext.jsx";
 
@@ -210,6 +211,7 @@ function OwnerDashboard() {
   return (
     <div className="owner-dashboard">
       <h1>Storefront sections</h1>
+      <p><Link to="/owner/products">Manage products</Link></p>
       <p>Choose which supported sections appear on your homepage and arrange their order.</p>
       {message ? <p role="status" className="owner-message">{message}</p> : null}
 
