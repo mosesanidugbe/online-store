@@ -34,6 +34,11 @@ test("owner can create a placeholder product and list it", async () => {
   expect(list.status).toBe(200);
   expect(list.body.products).toHaveLength(1);
   expect(list.body.products[0].name).toBe("Test Vintage Jacket");
+  const markedReal = await request(app).patch(`/manage/products/${response.body.product.id}`).set("Authorization", `Bearer ${token}`).send({ is_placeholder: false });
+  expect(markedReal.status).toBe(200);
+  expect(markedReal.body.product.is_placeholder).toBe(false);
+  const publicProducts = await request(app).get("/products");
+  expect(publicProducts.body.products).toEqual([expect.objectContaining({ name: "Test Vintage Jacket" })]);
 });
 
 test("owner product creation rejects invalid price and stock", async () => {
