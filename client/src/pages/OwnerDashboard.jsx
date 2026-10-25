@@ -83,8 +83,24 @@ function OwnerDashboard() {
   }, [request]);
 
   useEffect(() => {
-    loadSections();
-  }, [loadSections]);
+    let cancelled = false;
+
+    request("/storefront/manage/sections")
+      .then((data) => {
+        if (cancelled) return;
+        setSections(data.sections ?? []);
+        setStatus("ready");
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setMessage(error.message);
+        setStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [request]);
 
   function updateForm(key, value) {
     setForm((current) => ({ ...current, [key]: value }));
