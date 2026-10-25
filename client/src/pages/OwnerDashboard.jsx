@@ -294,7 +294,7 @@ function OwnerDashboard() {
                 <button type="button" className="secondary" onClick={() => patchSection(section, { is_visible: !section.is_visible })}>
                   {section.is_visible ? "Hide" : "Show"}
                 </button>
-                <button type="button" className="secondary" onClick={() => deleteSection(section)}>Delete</button>
+                <button type="button" className="secondary danger" onClick={() => deleteSection(section)}>Delete</button>
               </div>
             </div>
           </article>
