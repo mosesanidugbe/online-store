@@ -99,6 +99,7 @@ function ProductsManager() {
   return (
     <div className="owner-dashboard product-manager">
       <h1>Products</h1>
+      <p><Link to="/owner">← Back to storefront sections</Link></p>
       <p>Create test products or real catalogue entries for the store.</p>
       {message ? <p role="status" className="owner-message">{message}</p> : null}
       <section className="owner-panel">
