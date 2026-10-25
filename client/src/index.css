@@ -1,13 +1,91 @@
 :root {
-  /* Base */
-  --color-black: #000000;
+  /*
+   * Modern Vintage design tokens
+   * Use semantic tokens in components so the visual identity can evolve
+   * without each component needing its own colour values.
+   */
+
+  /* Brand palette */
+  --color-plum: #523b4a;
+  --color-cream: #f5f0e8;
+  --color-rose: #d39a8c;
+  --color-charcoal: #292522;
+  --color-linen: #e7ded3;
   --color-white: #ffffff;
 
-  /* Dark tones */
-  --color-dark: #111111;
-  --color-text: #242424;
+  /* Semantic surfaces */
+  --color-page-background: var(--color-cream);
+  --color-surface: var(--color-white);
+  --color-surface-muted: var(--color-linen);
+  --color-surface-accent: var(--color-rose);
 
-  /* Gray tones */
+  /* Text */
+  --color-text: var(--color-charcoal);
+  --color-text-muted: #665d58;
+  --color-text-inverse: var(--color-white);
+  --color-heading: var(--color-charcoal);
+
+  /* Actions and interactive states */
+  --color-primary: var(--color-plum);
+  --color-primary-hover: #412d3a;
+  --color-primary-active: #352430;
+  --color-secondary: var(--color-rose);
+  --color-link: var(--color-plum);
+  --color-link-hover: #412d3a;
+  --color-focus: #805b70;
+
+  /* Borders and feedback */
+  --color-border: #d5c8bc;
+  --color-border-strong: #a99689;
+  --color-error: #a12e36;
+  --color-success: #286747;
+
+  /* Typography */
+  --font-heading: Georgia, "Times New Roman", serif;
+  --font-body: Arial, Helvetica, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.75rem;
+  --font-size-3xl: 2.25rem;
+  --font-size-4xl: 3rem;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  /* Spacing scale (multiples of 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Shape and elevation */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-pill: 9999px;
+  --shadow-card: 0 4px 16px rgb(41 37 34 / 8%);
+  --shadow-popover: 0 8px 24px rgb(41 37 34 / 12%);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-normal: 220ms ease;
+
+  /*
+   * Legacy aliases: retained temporarily so existing components keep
+   * working while later styling phases migrate to semantic tokens.
+   */
+  --color-black: #000000;
+  --color-dark: #111111;
   --color-gray-dark: #595959;
   --color-gray: #6e6e6e;
   --color-gray-light: #d6d6d6;
@@ -22,11 +100,29 @@
 }
 
 html {
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
+  font-size: 100%;
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-page-background);
+  scroll-behavior: smooth;
 }
 
 body {
   min-width: 320px;
+  color: var(--color-text);
+  background-color: var(--color-page-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  line-height: var(--line-height-tight);
+  color: var(--color-heading);
 }
 
 img {
@@ -38,4 +134,28 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
