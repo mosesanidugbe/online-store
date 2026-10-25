@@ -210,6 +210,7 @@ function OwnerDashboard() {
   return (
     <div className="owner-dashboard">
       <h1>Storefront sections</h1>
+      <p><a href="/owner/products">Manage products</a></p>
       <p>Choose which supported sections appear on your homepage and arrange their order.</p>
       {message ? <p role="status" className="owner-message">{message}</p> : null}
 
