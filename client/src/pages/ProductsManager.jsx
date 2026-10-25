@@ -30,7 +30,25 @@ function ProductsManager() {
     }
   }, [request]);
 
-  useEffect(() => { loadProducts(); }, [loadProducts]);
+  useEffect(() => {
+    let ignore = false;
+
+    async function fetchProducts() {
+      try {
+        const data = await request("/manage/products");
+        if (!ignore) setProducts(data.products ?? []);
+      } catch (error) {
+        if (!ignore) setMessage(error.message);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+
+    fetchProducts();
+    return () => {
+      ignore = true;
+    };
+  }, [request]);
 
   function update(key, value) { setForm((current) => ({ ...current, [key]: value })); }
 
