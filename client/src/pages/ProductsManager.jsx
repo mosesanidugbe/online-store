@@ -10,7 +10,7 @@ const initialForm = {
   image_url: "",
   category: "",
   stock_quantity: "0",
-  is_placeholder: true,
+  is_placeholder: false,
   is_active: true,
 };
 
