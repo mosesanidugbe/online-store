@@ -5,7 +5,7 @@ import AuthContext from "../context/AuthContext.jsx";
 function Nav() {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
   const dropDownMenuRef = useRef(null);
 
   useEffect(() => {
