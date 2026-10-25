@@ -188,4 +188,27 @@ router.patch("/sections/:id", authenticateToken, requireOwner, async (req, res) 
   }
 });
 
+router.delete("/sections/:id", authenticateToken, requireOwner, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) {
+    return res.status(400).json({ message: "Section id must be a positive integer" });
+  }
+
+  try {
+    const result = await pool.query(
+      `DELETE FROM storefront_sections
+       WHERE id = $1 AND type IN ('hero_banner', 'featured_products')
+       RETURNING id`,
+      [id],
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Storefront section not found" });
+    }
+    res.status(200).json({ message: "Storefront section deleted", id: result.rows[0].id });
+  } catch (error) {
+    console.error("Failed to delete storefront section:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;
