@@ -13,16 +13,16 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const isSignup = pageState === "signup";
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const isSignup = pageState === "signup";
-    if (!username || !password || (isSignup && !email)) {
+    if (!username.trim() || !password || (isSignup && !email.trim())) {
       setErrorMessage(
         isSignup
-          ? "Username, email and password are required"
-          : "Username and password are required",
+          ? "Username, email and password are required."
+          : "Username and password are required.",
       );
       return;
     }
@@ -48,7 +48,7 @@ function Login() {
 
       const data = await response.json();
       if (!response.ok) {
-        setErrorMessage(data.message || "Unable to authenticate");
+        setErrorMessage(data.message || "Unable to authenticate. Please try again.");
         return;
       }
 
@@ -62,65 +62,98 @@ function Login() {
   }
 
   function togglePageState() {
-    setPageState(pageState === "login" ? "signup" : "login");
+    setPageState(isSignup ? "login" : "signup");
     setErrorMessage("");
   }
 
   return (
-    <div className="login-container">
-      <h1>{pageState === "login" ? "Login" : "Sign Up"}</h1>
-      <form onSubmit={(event) => handleSubmit(event)}>
-        <input
-          type="text"
-          onChange={(event) => setUserName(event.target.value)}
-          value={username}
-          placeholder="Username"
-        />
-        {pageState === "signup" && (
-          <input
-            type="email"
-            onChange={(event) => setEmail(event.target.value)}
-            value={email}
-            placeholder="Email"
-          />
-        )}
-        <input
-          type={showPassword ? "text" : "password"}
-          onChange={(event) => setPassword(event.target.value)}
-          value={password}
-          placeholder="Password"
-        />
-        <label>
-          <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={(event) => setShowPassword(event.target.checked)}
-          />
-          Show password
-        </label>
-        <p role="alert" className="error-message">
-          {errorMessage}
+    <main className="auth-page">
+      <section className="login-container" aria-labelledby="auth-title">
+        <p className="auth-eyebrow">A little something lovely</p>
+        <h1 id="auth-title">{isSignup ? "Create your account" : "Welcome back"}</h1>
+        <p className="auth-intro">
+          {isSignup
+            ? "Join us to keep your favourite finds close."
+            : "Sign in and pick up where you left off."}
         </p>
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? "Submitting..."
-            : pageState === "login"
-              ? "Login"
-              : "Sign up"}
-        </button>
-      </form>
 
-      <div className="toggle-container">
-        <p>
-          {pageState === "login"
-            ? "Don't have an account? "
-            : "Already have an account? "}
-        </p>
-        <button type="button" onClick={togglePageState}>
-          {pageState === "login" ? "Sign Up" : "Login"}
-        </button>
-      </div>
-    </div>
+        <form onSubmit={handleSubmit} aria-describedby={errorMessage ? "auth-error" : undefined}>
+          <div className="auth-field">
+            <label htmlFor="auth-username">Username</label>
+            <input
+              id="auth-username"
+              name="username"
+              type="text"
+              autoComplete="username"
+              onChange={(event) => setUserName(event.target.value)}
+              value={username}
+              placeholder="Your username"
+              required
+            />
+          </div>
+
+          {isSignup && (
+            <div className="auth-field">
+              <label htmlFor="auth-email">Email address</label>
+              <input
+                id="auth-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                onChange={(event) => setEmail(event.target.value)}
+                value={email}
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+          )}
+
+          <div className="auth-field">
+            <label htmlFor="auth-password">Password</label>
+            <input
+              id="auth-password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete={isSignup ? "new-password" : "current-password"}
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <label className="auth-password-toggle">
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={(event) => setShowPassword(event.target.checked)}
+            />
+            <span>Show password</span>
+          </label>
+
+          {errorMessage && (
+            <p id="auth-error" role="alert" className="error-message">
+              {errorMessage}
+            </p>
+          )}
+
+          <button className="auth-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting
+              ? "Please wait…"
+              : isSignup
+                ? "Create account"
+                : "Sign in"}
+          </button>
+        </form>
+
+        <div className="toggle-container">
+          <p>{isSignup ? "Already have an account?" : "New around here?"}</p>
+          <button type="button" onClick={togglePageState}>
+            {isSignup ? "Sign in" : "Create an account"}
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }
 
