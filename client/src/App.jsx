@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
       <div className="app-container">
         <header>
-          <Link to="/" className="store-logo">SEWSS VINTAGE</Link>
+          <Link to="/" className="store-logo">Sewss Vintage</Link>
           <form>
             <input type="search" placeholder="Search products..." />
             <button type="submit">Search</button>
