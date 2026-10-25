@@ -21,6 +21,9 @@ function ProductsManager() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editingProductId, setEditingProductId] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [stockQuantities, setStockQuantities] = useState({});
 
   const request = useCallback(
     async (path, options = {}) => {
@@ -85,6 +88,61 @@ function ProductsManager() {
       setMessage("Product updated.");
     } catch (error) {
       setMessage(error.message);
+    }
+  }
+
+  function startEditing(product) {
+    setEditingProductId(product.id);
+    setEditForm({
+      name: product.name,
+      description: product.description ?? "",
+      price: String(product.price),
+      image_url: product.image_url ?? "",
+      category: product.category ?? "",
+    });
+    setMessage("");
+  }
+
+  async function saveProductDetails(event, product) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage("");
+    try {
+      await request(`/manage/products/${product.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ ...editForm, price: Number(editForm.price) }),
+      });
+      setEditingProductId(null);
+      await loadProducts();
+      setMessage("Product details saved.");
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function adjustStock(product, adjustment) {
+    const rawQuantity = stockQuantities[product.id] ?? "";
+    const quantity = Number(rawQuantity);
+    if (rawQuantity === "" || !Number.isInteger(quantity) || quantity < 0 || (adjustment === "add" && quantity < 1)) {
+      setMessage(adjustment === "add" ? "Enter a whole number of units to add (at least 1)." : "Enter the actual stock count as a whole number (0 or more).");
+      return;
+    }
+    setMessage("");
+    setSaving(true);
+    try {
+      await request(`/manage/products/${product.id}/stock`, {
+        method: "POST",
+        body: JSON.stringify({ adjustment, quantity }),
+      });
+      setStockQuantities((current) => ({ ...current, [product.id]: "" }));
+      await loadProducts();
+      setMessage(adjustment === "add" ? "Stock added." : "Stock count corrected.");
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -249,6 +307,17 @@ function ProductsManager() {
                   type="button"
                   className="secondary"
                   onClick={() =>
+                    editingProductId === product.id
+                      ? setEditingProductId(null)
+                      : startEditing(product)
+                  }
+                >
+                  {editingProductId === product.id ? "Cancel edit" : "Edit details"}
+                </button>
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={() =>
                     updateProduct(product, {
                       is_placeholder: !product.is_placeholder,
                     })
@@ -264,7 +333,7 @@ function ProductsManager() {
                   }
                 >
                   {product.is_active ? "Deactivate" : "Activate"}
-                </button>{" "}
+                </button>
                 <button
                   type="button"
                   className="secondary"
@@ -281,6 +350,56 @@ function ProductsManager() {
                   />
                 ) : null}
               </div>
+            </div>
+            {editingProductId === product.id ? (
+              <form
+                className="owner-section-form product-edit-form"
+                onSubmit={(event) => saveProductDetails(event, product)}
+              >
+                <label>
+                  Product name
+                  <input required maxLength={150} value={editForm.name} onChange={(event) => setEditForm((current) => ({ ...current, name: event.target.value }))} />
+                </label>
+                <label>
+                  Description
+                  <textarea rows={3} maxLength={5000} value={editForm.description} onChange={(event) => setEditForm((current) => ({ ...current, description: event.target.value }))} />
+                </label>
+                <label>
+                  Price
+                  <input required type="number" min="0" step="0.01" value={editForm.price} onChange={(event) => setEditForm((current) => ({ ...current, price: event.target.value }))} />
+                </label>
+                <label>
+                  Image URL
+                  <input value={editForm.image_url} onChange={(event) => setEditForm((current) => ({ ...current, image_url: event.target.value }))} />
+                </label>
+                <label>
+                  Category
+                  <input maxLength={100} value={editForm.category} onChange={(event) => setEditForm((current) => ({ ...current, category: event.target.value }))} />
+                </label>
+                <div className="owner-form-actions">
+                  <button type="submit" disabled={saving}>{saving ? "Saving…" : "Save details"}</button>
+                  <button type="button" className="secondary" onClick={() => setEditingProductId(null)}>Cancel</button>
+                </div>
+              </form>
+            ) : null}
+            <div className="product-stock-controls">
+              <label>
+                Stock quantity
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={stockQuantities[product.id] ?? ""}
+                  onChange={(event) => setStockQuantities((current) => ({ ...current, [product.id]: event.target.value }))}
+                  placeholder="Enter units"
+                  aria-label={`Stock quantity for ${product.name}`}
+                />
+              </label>
+              <div className="owner-section-actions">
+                <button type="button" className="secondary" disabled={saving} onClick={() => adjustStock(product, "add")}>Add stock</button>
+                <button type="button" className="secondary" disabled={saving} onClick={() => adjustStock(product, "set")}>Correct stock count</button>
+              </div>
+              <p>Add stock increases the current count; correct stock count replaces it with the actual total.</p>
             </div>
           </article>
         ))}
