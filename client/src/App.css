@@ -4,6 +4,29 @@
   flex-direction: column;
 }
 
+.store-logo {
+  color: var(--color-text-inverse);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.store-logo:hover {
+  color: var(--color-rose);
+}
+
+.store-logo:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
 header {
   display: flex;
   align-items: center;
