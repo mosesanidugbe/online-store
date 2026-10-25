@@ -23,7 +23,6 @@ function ProductsManager() {
     try {
       const data = await request("/manage/products");
       setProducts(data.products ?? []);
-      setMessage("");
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -39,8 +38,8 @@ function ProductsManager() {
     setMessage("");
     try {
       await request(`/manage/products/${product.id}`, { method: "PATCH", body: JSON.stringify(patch) });
-      setMessage("Product updated.");
       await loadProducts();
+      setMessage("Product updated.");
     } catch (error) {
       setMessage(error.message);
     }
@@ -53,8 +52,8 @@ function ProductsManager() {
     try {
       await request("/manage/products", { method: "POST", body: JSON.stringify({ ...form, price: Number(form.price), stock_quantity: Number(form.stock_quantity) }) });
       setForm(initialForm);
-      setMessage("Product created.");
       await loadProducts();
+      setMessage("Product created.");
     } catch (error) {
       setMessage(error.message);
     } finally {
