@@ -7,6 +7,7 @@ const MAX_PRODUCTS = 12;
 function FeaturedProductsSection({ section }) {
   const [products, setProducts] = useState([]);
   const [status, setStatus] = useState("loading");
+  const [emptyMessage, setEmptyMessage] = useState("");
   const settings = section.settings ?? {};
   const requestedLimit = Number(settings.limit ?? settings.max_products ?? 8);
   const limit = Number.isFinite(requestedLimit)
@@ -40,6 +41,17 @@ function FeaturedProductsSection({ section }) {
           : availableProducts;
 
         setProducts(selectedProducts.slice(0, limit));
+        if (selectedProducts.length === 0 && availableProducts.length === 0) {
+          setEmptyMessage(
+            "No products are ready to feature yet. In Product Management, make sure products are active and marked as real (not test/placeholder).",
+          );
+        } else if (selectedProducts.length === 0 && selectedIds.length > 0) {
+          setEmptyMessage(
+            "None of this section’s selected product IDs match active, real products. Update the IDs or mark the intended products as real and active.",
+          );
+        } else {
+          setEmptyMessage("No featured products are available yet.");
+        }
         setStatus("success");
       } catch (error) {
         if (error.name !== "AbortError") {
@@ -66,7 +78,7 @@ function FeaturedProductsSection({ section }) {
         <p role="alert">Products are temporarily unavailable.</p>
       ) : null}
       {status === "success" && products.length === 0 ? (
-        <p>No featured products are available yet.</p>
+        <p role="status">{emptyMessage || "No featured products are available yet."}</p>
       ) : null}
       {status === "success" && products.length > 0 ? (
         <div className="products-list">
