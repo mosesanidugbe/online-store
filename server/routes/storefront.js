@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "../db.js";
 import authenticateToken from "../middleware/authMiddleware.js";
+import requireOwner from "../middleware/requireOwner.js";
 
 const router = express.Router();
 const editableTypes = new Set(["hero_banner", "featured_products"]);
@@ -64,13 +65,6 @@ function validateTitle(title) {
 
 function validateDisplayOrder(value) {
   return Number.isInteger(value) && value >= 0;
-}
-
-function requireOwner(req, res, next) {
-  if (req.user?.role !== "OWNER") {
-    return res.status(403).json({ message: "Owner access required" });
-  }
-  next();
 }
 
 router.get("/sections", async (req, res) => {
