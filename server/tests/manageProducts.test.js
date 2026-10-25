@@ -47,3 +47,31 @@ test("owner product creation rejects invalid price and stock", async () => {
   expect((await request(app).post("/manage/products").set("Authorization", `Bearer ${token}`).send({ ...base, price: -1 })).status).toBe(400);
   expect((await request(app).post("/manage/products").set("Authorization", `Bearer ${token}`).send({ ...base, stock_quantity: -1 })).status).toBe(400);
 });
+
+
+test("owner can permanently delete a product and missing products return 404", async () => {
+  const token = await createOwner();
+  const created = await request(app).post("/manage/products")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: "Product to delete", price: 12, stock_quantity: 0 });
+  expect(created.status).toBe(201);
+
+  const productId = created.body.product.id;
+  const deleted = await request(app).delete(`/manage/products/${productId}`)
+    .set("Authorization", `Bearer ${token}`);
+  expect(deleted.status).toBe(200);
+  expect(deleted.body.product).toEqual({ id: productId, name: "Product to delete" });
+
+  const list = await request(app).get("/manage/products").set("Authorization", `Bearer ${token}`);
+  expect(list.body.products).toHaveLength(0);
+
+  const missing = await request(app).delete(`/manage/products/${productId}`)
+    .set("Authorization", `Bearer ${token}`);
+  expect(missing.status).toBe(404);
+});
+
+test("product deletion requires owner authorization", async () => {
+  const customerToken = await createOwner("CUSTOMER");
+  expect((await request(app).delete("/manage/products/1")
+    .set("Authorization", `Bearer ${customerToken}`)).status).toBe(403);
+});
