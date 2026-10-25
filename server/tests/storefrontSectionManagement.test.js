@@ -102,6 +102,50 @@ test("owner can edit content, visibility and order; public endpoint hides invisi
   expect(publicSections.body).toEqual({ sections: [] });
 });
 
+test("only owners can delete manageable sections and deleted sections disappear", async () => {
+  const ownerToken = await createUser("OWNER");
+  const customerToken = await createUser("CUSTOMER");
+
+  const created = await request(app)
+    .post("/storefront/sections")
+    .set("Authorization", `Bearer ${ownerToken}`)
+    .send(sectionPayload);
+  expect(created.status).toBe(201);
+  const id = created.body.section.id;
+
+  const anonymous = await request(app).delete(`/storefront/sections/${id}`);
+  expect(anonymous.status).toBe(401);
+
+  const customer = await request(app)
+    .delete(`/storefront/sections/${id}`)
+    .set("Authorization", `Bearer ${customerToken}`);
+  expect(customer.status).toBe(403);
+
+  const deleted = await request(app)
+    .delete(`/storefront/sections/${id}`)
+    .set("Authorization", `Bearer ${ownerToken}`);
+  expect(deleted.status).toBe(200);
+  expect(deleted.body).toEqual({ message: "Storefront section deleted", id });
+
+  const managed = await request(app)
+    .get("/storefront/manage/sections")
+    .set("Authorization", `Bearer ${ownerToken}`);
+  expect(managed.body.sections.some((section) => section.id === id)).toBe(false);
+
+  const missing = await request(app)
+    .delete(`/storefront/sections/${id}`)
+    .set("Authorization", `Bearer ${ownerToken}`);
+  expect(missing.status).toBe(404);
+});
+
+test("section deletion rejects invalid ids", async () => {
+  const token = await createUser("OWNER");
+  const invalid = await request(app)
+    .delete("/storefront/sections/not-an-id")
+    .set("Authorization", `Bearer ${token}`);
+  expect(invalid.status).toBe(400);
+});
+
 test("section update validates fields and reports missing sections", async () => {
   const token = await createUser();
   const badOrder = await request(app)
