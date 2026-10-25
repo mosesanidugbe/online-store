@@ -753,10 +753,23 @@ nav a:focus-visible {
   }
 
   nav {
-    width: 100%;
-    justify-content: space-between;
+    width: auto;
+    flex: 1 1 auto;
+    justify-content: flex-end;
     gap: var(--space-1);
-    margin-left: 0;
+    margin-left: auto;
+    order: 2;
+  }
+
+  .store-logo {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  header > form {
+    order: 3;
+    flex: 1 0 100%;
+    width: 100%;
   }
 
   nav a,
@@ -834,8 +847,22 @@ nav a:focus-visible {
     padding: var(--space-4);
   }
 
+  .storefront-sections .product-section-header {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .storefront-sections .product-section-header > div {
+    width: 100%;
+  }
+
   .storefront-sections .product-section-header h2 {
     font-size: var(--font-size-2xl);
+    text-align: center;
+  }
+
+  .storefront-sections .product-section-header p {
+    margin-inline: auto;
   }
 
   .storefront-sections .products-list {
@@ -845,12 +872,23 @@ nav a:focus-visible {
   }
 
   .storefront-sections .product-card {
-    flex-basis: min(250px, 72vw);
-    min-height: 310px;
+    flex-basis: min(190px, 44vw);
+    min-height: 255px;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
   }
 
   .storefront-sections .product-card img {
-    height: 190px;
+    height: 125px;
+    border-radius: var(--radius-sm);
+  }
+
+  .storefront-sections .product-card h3 {
+    font-size: var(--font-size-sm);
+  }
+
+  .storefront-sections .product-card p {
+    font-size: var(--font-size-sm);
   }
 
   .storefront-message {
