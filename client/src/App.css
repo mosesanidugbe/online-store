@@ -343,7 +343,8 @@ nav a:focus-visible {
 .storefront-sections .products-list {
   display: flex;
   align-items: stretch;
-  gap: clamp(var(--space-3), 2vw, var(--space-5));
+  width: 100%;
+  min-width: 0;
   gap: clamp(var(--space-3), 2vw, var(--space-5));
   overflow-x: auto;
   overscroll-behavior-inline: contain;
