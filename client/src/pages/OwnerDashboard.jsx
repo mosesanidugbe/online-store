@@ -165,6 +165,23 @@ function OwnerDashboard() {
     }
   }
 
+  async function deleteSection(section) {
+    const confirmed = window.confirm(
+      `Delete "${section.title}"? This removes the section from your storefront and cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setMessage("");
+    try {
+      await request(`/storefront/sections/${section.id}`, { method: "DELETE" });
+      if (editingId === section.id) cancelEdit();
+      await loadSections();
+      setMessage("Section deleted.");
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+
   async function moveSection(index, direction) {
     const nextIndex = index + direction;
     if (nextIndex < 0 || nextIndex >= sections.length) return;
@@ -275,6 +292,7 @@ function OwnerDashboard() {
                 <button type="button" className="secondary" onClick={() => patchSection(section, { is_visible: !section.is_visible })}>
                   {section.is_visible ? "Hide" : "Show"}
                 </button>
+                <button type="button" className="secondary" onClick={() => deleteSection(section)}>Delete</button>
               </div>
             </div>
           </article>
