@@ -151,7 +151,8 @@ nav input[type="search"]:focus {
 }
 
 .product-section {
-  padding: var(--space-6);
+  /* Match the hero's horizontal inset so section headings share an edge. */
+  padding: var(--space-6) clamp(var(--space-6), 6vw, var(--space-16));
   background-color: var(--color-surface-muted);
 }
 
