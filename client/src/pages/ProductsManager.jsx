@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import API_URL from "../api.js";
 import AuthContext from "../context/AuthContext.jsx";
 
@@ -63,6 +64,22 @@ function ProductsManager() {
     }
   }
 
+  async function deleteProduct(product) {
+    const confirmed = window.confirm(
+      `Permanently delete "${product.name}"? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setMessage("");
+    try {
+      await request(`/manage/products/${product.id}`, { method: "DELETE" });
+      await loadProducts();
+      setMessage("Product deleted.");
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+
   async function createProduct(event) {
     event.preventDefault();
     setSaving(true);
@@ -108,7 +125,7 @@ function ProductsManager() {
               <div><h3>{product.name}</h3><p>{product.category || "Uncategorised"} · {Number(product.price).toFixed(2)}</p><p>{product.is_placeholder ? "Test product" : "Real product"} · {product.is_active ? "Active" : "Inactive"} · Stock: {product.stock_quantity}</p></div>
               <div className="owner-section-actions">
                 <button type="button" className="secondary" onClick={() => updateProduct(product, { is_placeholder: !product.is_placeholder })}>{product.is_placeholder ? "Mark as real" : "Mark as test"}</button>
-                <button type="button" className="secondary" onClick={() => updateProduct(product, { is_active: !product.is_active })}>{product.is_active ? "Deactivate" : "Activate"}</button>
+                <button type="button" className="secondary" onClick={() => updateProduct(product, { is_active: !product.is_active })}>{product.is_active ? "Deactivate" : "Activate"}</button>\n                <button type="button" className="secondary" onClick={() => deleteProduct(product)}>Delete permanently</button>
                 {product.image_url ? <img className="product-manager-image" src={product.image_url} alt={product.name} loading="lazy" /> : null}
               </div>
             </div>
