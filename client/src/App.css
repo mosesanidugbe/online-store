@@ -79,6 +79,52 @@ nav input[type="search"]:focus {
   border-radius: 4px;
 }
 
+.storefront-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 32px;
+}
+
+.storefront-message {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.storefront-hero {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  padding: clamp(24px, 6vw, 72px);
+  background-color: #e8edf5;
+  background-position: center;
+  background-size: cover;
+}
+
+.storefront-hero-content {
+  max-width: 680px;
+}
+
+.storefront-hero-content h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.storefront-hero-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.storefront-hero-cta {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 18px;
+  border-radius: 4px;
+  background-color: #111827;
+  color: #ffffff;
+  text-decoration: none;
+}
+
 .product-section {
   padding: 20px;
   background-color: #4673ae79;
@@ -88,15 +134,15 @@ nav input[type="search"]:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
 .products-list {
   display: flex;
   overflow-x: auto;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
+  padding: 20px 0;
 }
 
 .product-card {
@@ -107,6 +153,13 @@ nav input[type="search"]:focus {
   border-radius: 8px;
   padding: 10px;
   text-align: center;
+  background: #ffffff;
+}
+
+.product-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: contain;
 }
 
 .login-container {
