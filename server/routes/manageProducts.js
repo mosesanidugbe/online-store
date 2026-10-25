@@ -8,11 +8,7 @@ router.use(authenticateToken, requireOwner);
 
 router.get("/", async (_req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT id, name, description, price, image_url, category, stock_quantity,
-              is_placeholder, is_active, created_at
-       FROM products ORDER BY created_at DESC, id DESC`,
-    );
+    const result = await pool.query("SELECT id, name, description, price, image_url, category, stock_quantity, is_placeholder, is_active, created_at FROM products ORDER BY created_at DESC, id DESC");
     res.status(200).json({ products: result.rows });
   } catch (error) {
     console.error("Failed to retrieve managed products:", error.message);
