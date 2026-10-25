@@ -41,4 +41,28 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.patch("/:id", async (req, res) => {
+  const productId = Number(req.params.id);
+  if (!Number.isInteger(productId) || productId < 1) {
+    return res.status(400).json({ message: "Product ID must be a positive integer" });
+  }
+  const keys = Object.keys(req.body ?? {});
+  if (keys.length === 0 || keys.some((key) => !["is_placeholder", "is_active"].includes(key)) ||
+      keys.some((key) => typeof req.body[key] !== "boolean")) {
+    return res.status(400).json({ message: "Provide is_placeholder and/or is_active as boolean values" });
+  }
+
+  try {
+    const result = await pool.query(
+      "UPDATE products SET is_placeholder = COALESCE($1, is_placeholder), is_active = COALESCE($2, is_active) WHERE id = $3 RETURNING id, name, description, price, image_url, category, stock_quantity, is_placeholder, is_active, created_at",
+      [req.body.is_placeholder ?? null, req.body.is_active ?? null, productId],
+    );
+    if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
+    res.status(200).json({ product: result.rows[0] });
+  } catch (error) {
+    console.error("Failed to update product status:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;
